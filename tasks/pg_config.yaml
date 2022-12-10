@@ -1,0 +1,197 @@
+- name: Make postgresql listen to all interfaces
+  lineinfile:
+    state: present
+    line: listen_addresses = '0.0.0.0'
+    path: /etc/postgresql/14/main/postgresql.conf
+    regexp: '^#?listen_addresses ='
+  notify:
+    - restart postgresql
+
+# - name: Set max_connections
+#   lineinfile:
+#     state: present
+#     line: max_connections = 200
+#     path: /etc/postgresql/14/main/postgresql.conf
+#     regexp: '^#?max_connections ='
+#   notify:
+#     - restart postgresql
+#
+# - name: Set shared_buffers
+#   lineinfile:
+#     state: present
+#     line: shared_buffers = 2GB
+#     path: /etc/postgresql/14/main/postgresql.conf
+#     regexp: '^#?shared_buffers ='
+#   notify:
+#     - restart postgresql
+#
+# - name: Set effective_cache_size
+#   lineinfile:
+#     state: present
+#     line: effective_cache_size = 6GB
+#     path: /etc/postgresql/14/main/postgresql.conf
+#     regexp: '^#?effective_cache_size ='
+#   notify:
+#     - restart postgresql
+#
+# - name: Set maintenance_work_mem
+#   lineinfile:
+#     state: present
+#     line: maintenance_work_mem = 514MB
+#     path: /etc/postgresql/14/main/postgresql.conf
+#     regexp: '^#?maintenance_work_mem ='
+#   notify:
+#     - restart postgresql
+#
+# - name: Set checkpoint_completion_target
+#   lineinfile:
+#     state: present
+#     line: checkpoint_completion_target = 0.7
+#     path: /etc/postgresql/14/main/postgresql.conf
+#     regexp: '^#?checkpoint_completion_target ='
+#   notify:
+#     - restart postgresql
+#
+# - name: Set wal_buffers
+#   lineinfile:
+#     state: present
+#     line: wal_buffers = 16MB
+#     path: /etc/postgresql/14/main/postgresql.conf
+#     regexp: '^#?wal_buffers ='
+#   notify:
+#     - restart postgresql
+#
+# - name: Set default_statistics_target
+#   lineinfile:
+#     state: present
+#     line: default_statistics_target = 100
+#     path: /etc/postgresql/14/main/postgresql.conf
+#     regexp: '^#?default_statistics_target ='
+#   notify:
+#     - restart postgresql
+#
+# - name: Set random_page_cost
+#   lineinfile:
+#     state: present
+#     line: random_page_cost = 1.1
+#     path: /etc/postgresql/14/main/postgresql.conf
+#     regexp: '^#?random_page_cost ='
+#   notify:
+#     - restart postgresql
+#
+# - name: Set effective_io_concurrency
+#   lineinfile:
+#     state: present
+#     line: effective_io_concurrency = 200
+#     path: /etc/postgresql/14/main/postgresql.conf
+#     regexp: '^#?effective_io_concurrency ='
+#   notify:
+#     - restart postgresql
+#
+# - name: Set work_mem
+#   lineinfile:
+#     state: present
+#     line: work_mem = 10485kB
+#     path: /etc/postgresql/14/main/postgresql.conf
+#     regexp: '^#?work_mem ='
+#   notify:
+#     - restart postgresql
+#
+# - name: Set min_wal_size
+#   lineinfile:
+#     state: present
+#     line: min_wal_size = 1GB
+#     path: /etc/postgresql/14/main/postgresql.conf
+#     regexp: '^#?min_wal_size ='
+#   notify:
+#     - restart postgresql
+#
+# - name: Set max_wal_size
+#   lineinfile:
+#     state: present
+#     line: max_wal_size = 4GB
+#     path: /etc/postgresql/14/main/postgresql.conf
+#     regexp: '^#?max_wal_size ='
+#   notify:
+#     - restart postgresql
+#
+# - name: Set max_worker_processes
+#   lineinfile:
+#     state: present
+#     line: max_worker_processes = 2
+#     path: /etc/postgresql/14/main/postgresql.conf
+#     regexp: '^#?max_worker_processes ='
+#   notify:
+#     - restart postgresql
+#
+# - name: Set max_parallel_workers_per_gather
+#   lineinfile:
+#     state: present
+#     line: max_parallel_workers_per_gather = 1
+#     path: /etc/postgresql/14/main/postgresql.conf
+#     regexp: '^#?max_parallel_workers_per_gather ='
+#   notify:
+#     - restart postgresql
+#
+# - name: Set max_parallel_workers
+#   lineinfile:
+#     state: present
+#     line: max_parallel_workers = 2
+#     path: /etc/postgresql/14/main/postgresql.conf
+#     regexp: '^#?max_parallel_workers ='
+#   notify:
+#     - restart postgresql
+#
+# - name: Set max_parallel_maintenance_workers
+#   lineinfile:
+#     state: present
+#     line: max_parallel_maintenance_workers = 1
+#     path: /etc/postgresql/14/main/postgresql.conf
+#     regexp: '^#?max_parallel_maintenance_workers ='
+#   notify:
+#     - restart postgresql
+
+- name: Trust all connections to the socket
+  postgresql_pg_hba:
+    dest: /etc/postgresql/14/main/pg_hba.conf
+    contype: local
+    method: trust
+  notify:
+    - restart postgresql
+
+- name: Allow remote login from docker IPs
+  postgresql_pg_hba:
+    dest: /etc/postgresql/14/main/pg_hba.conf
+    contype: host
+    method: md5
+    address: "{{ item }}"
+  loop:
+    - 172.16.0.0/12
+    - 192.168.0.0/16
+  notify:
+    - restart postgresql
+
+# - name: Make postgresql accept remote logins
+#   lineinfile:
+#     state: present
+#     line: host    all     all     172.16.0.0/14       md5
+#     path: /etc/postgresql/14/main/pg_hba.conf
+#   notify:
+#     - restart postgresql
+
+# - name: Make data folder
+#   file:
+#     path: "{{ postgresql_data_path }}"
+#     state: directory
+#     mode: 0750
+#     owner: postgres
+#     group: postgres
+
+# - name: Point data directory to our data volume
+#   lineinfile:
+#     state: present
+#     line: "data_directory = '{{ postgresql_data_path }}'"
+#     path: '/etc/postgresql/14/main/postgresql.conf'
+#     regexp: '^data_directory ='
+#   notify:
+#     - restart postgresql

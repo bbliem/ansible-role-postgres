@@ -1,0 +1,17 @@
+[Unit]
+Description=Postgresql exporter
+After=syslog.target network.target
+
+[Service]
+Environment=PG_EXPORTER_WEB_LISTEN_ADDRESS=0.0.0.0:9187
+Environment=DATA_SOURCE_NAME="user=postgres host=/var/run/postgresql/ sslmode=disable"
+
+User=postgres
+Group=postgres
+
+WorkingDirectory=/opt/postgres_exporter-0.11.1.linux-amd64
+ExecStart=/opt/postgres_exporter-0.11.1.linux-amd64/postgres_exporter
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

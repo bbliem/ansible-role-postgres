@@ -1,0 +1,30 @@
+---
+- include_tasks: packages.yaml
+  tags:
+    - packages
+
+- include_tasks: pg_config.yaml
+  tags:
+    - postgres
+
+- include_tasks: databases.yaml
+  loop: "{{ postgres_databases }}"
+  tags:
+    - databases
+
+- include_tasks: exporter.yaml
+  tags:
+    - exporter
+
+- name: Allow access from Docker containers
+  ufw:
+    rule: allow
+    proto: tcp
+    from_ip: "{{ item }}"
+    to_ip: any
+    to_port: "5432"
+  with_items:
+    - "172.16.0.0/12"
+    - "192.168.0.0/16"
+  notify:
+    - restart ufw

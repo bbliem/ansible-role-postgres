@@ -1,0 +1,17 @@
+---
+- name: Create database
+  become: yes
+  become_user: postgres
+  postgresql_db:
+    state: present
+    name: "{{ item.name }}"
+
+- name: Create user
+  become: yes
+  become_user: postgres
+  postgresql_user:
+    state: present
+    db: "{{ item.name }}"
+    name: "{{ item.user }}"
+    password: "{{ item.password }}"
+    priv: ALL

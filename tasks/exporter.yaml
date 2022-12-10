@@ -1,0 +1,19 @@
+---
+- name: Get exporter
+  unarchive:
+    src: https://github.com/prometheus-community/postgres_exporter/releases/download/v0.11.1/postgres_exporter-0.11.1.linux-amd64.tar.gz
+    dest: /opt/
+    remote_src: yes
+
+- name: Set up exporter systemd service
+  template:
+    dest: /etc/systemd/system/postgres-exporter.service
+    src: exporter.service
+  notify:
+    - restart exporter
+
+- name: Reload systemd daemon
+  systemd:
+    name: postgres-exporter
+    enabled: yes
+    daemon_reload: yes
