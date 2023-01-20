@@ -1,5 +1,5 @@
 - name: Make postgresql listen to all interfaces
-  lineinfile:
+  ansible.builtin.lineinfile:
     state: present
     line: listen_addresses = '0.0.0.0'
     path: /etc/postgresql/14/main/postgresql.conf
@@ -8,7 +8,7 @@
     - restart postgresql
 
 # - name: Set max_connections
-#   lineinfile:
+#   ansible.builtin.lineinfile:
 #     state: present
 #     line: max_connections = 200
 #     path: /etc/postgresql/14/main/postgresql.conf
@@ -17,7 +17,7 @@
 #     - restart postgresql
 #
 # - name: Set shared_buffers
-#   lineinfile:
+#   ansible.builtin.lineinfile:
 #     state: present
 #     line: shared_buffers = 2GB
 #     path: /etc/postgresql/14/main/postgresql.conf
@@ -26,7 +26,7 @@
 #     - restart postgresql
 #
 # - name: Set effective_cache_size
-#   lineinfile:
+#   ansible.builtin.lineinfile:
 #     state: present
 #     line: effective_cache_size = 6GB
 #     path: /etc/postgresql/14/main/postgresql.conf
@@ -35,7 +35,7 @@
 #     - restart postgresql
 #
 # - name: Set maintenance_work_mem
-#   lineinfile:
+#   ansible.builtin.lineinfile:
 #     state: present
 #     line: maintenance_work_mem = 514MB
 #     path: /etc/postgresql/14/main/postgresql.conf
@@ -44,7 +44,7 @@
 #     - restart postgresql
 #
 # - name: Set checkpoint_completion_target
-#   lineinfile:
+#   ansible.builtin.lineinfile:
 #     state: present
 #     line: checkpoint_completion_target = 0.7
 #     path: /etc/postgresql/14/main/postgresql.conf
@@ -53,7 +53,7 @@
 #     - restart postgresql
 #
 # - name: Set wal_buffers
-#   lineinfile:
+#   ansible.builtin.lineinfile:
 #     state: present
 #     line: wal_buffers = 16MB
 #     path: /etc/postgresql/14/main/postgresql.conf
@@ -62,7 +62,7 @@
 #     - restart postgresql
 #
 # - name: Set default_statistics_target
-#   lineinfile:
+#   ansible.builtin.lineinfile:
 #     state: present
 #     line: default_statistics_target = 100
 #     path: /etc/postgresql/14/main/postgresql.conf
@@ -71,7 +71,7 @@
 #     - restart postgresql
 #
 # - name: Set random_page_cost
-#   lineinfile:
+#   ansible.builtin.lineinfile:
 #     state: present
 #     line: random_page_cost = 1.1
 #     path: /etc/postgresql/14/main/postgresql.conf
@@ -80,7 +80,7 @@
 #     - restart postgresql
 #
 # - name: Set effective_io_concurrency
-#   lineinfile:
+#   ansible.builtin.lineinfile:
 #     state: present
 #     line: effective_io_concurrency = 200
 #     path: /etc/postgresql/14/main/postgresql.conf
@@ -89,7 +89,7 @@
 #     - restart postgresql
 #
 # - name: Set work_mem
-#   lineinfile:
+#   ansible.builtin.lineinfile:
 #     state: present
 #     line: work_mem = 10485kB
 #     path: /etc/postgresql/14/main/postgresql.conf
@@ -98,7 +98,7 @@
 #     - restart postgresql
 #
 # - name: Set min_wal_size
-#   lineinfile:
+#   ansible.builtin.lineinfile:
 #     state: present
 #     line: min_wal_size = 1GB
 #     path: /etc/postgresql/14/main/postgresql.conf
@@ -107,7 +107,7 @@
 #     - restart postgresql
 #
 # - name: Set max_wal_size
-#   lineinfile:
+#   ansible.builtin.lineinfile:
 #     state: present
 #     line: max_wal_size = 4GB
 #     path: /etc/postgresql/14/main/postgresql.conf
@@ -116,7 +116,7 @@
 #     - restart postgresql
 #
 # - name: Set max_worker_processes
-#   lineinfile:
+#   ansible.builtin.lineinfile:
 #     state: present
 #     line: max_worker_processes = 2
 #     path: /etc/postgresql/14/main/postgresql.conf
@@ -125,7 +125,7 @@
 #     - restart postgresql
 #
 # - name: Set max_parallel_workers_per_gather
-#   lineinfile:
+#   ansible.builtin.lineinfile:
 #     state: present
 #     line: max_parallel_workers_per_gather = 1
 #     path: /etc/postgresql/14/main/postgresql.conf
@@ -134,7 +134,7 @@
 #     - restart postgresql
 #
 # - name: Set max_parallel_workers
-#   lineinfile:
+#   ansible.builtin.lineinfile:
 #     state: present
 #     line: max_parallel_workers = 2
 #     path: /etc/postgresql/14/main/postgresql.conf
@@ -143,7 +143,7 @@
 #     - restart postgresql
 #
 # - name: Set max_parallel_maintenance_workers
-#   lineinfile:
+#   ansible.builtin.lineinfile:
 #     state: present
 #     line: max_parallel_maintenance_workers = 1
 #     path: /etc/postgresql/14/main/postgresql.conf
@@ -152,7 +152,7 @@
 #     - restart postgresql
 
 - name: Trust all connections to the socket
-  postgresql_pg_hba:
+  community.postgresql.postgresql_pg_hba:
     dest: /etc/postgresql/14/main/pg_hba.conf
     contype: local
     method: trust
@@ -160,7 +160,7 @@
     - restart postgresql
 
 - name: Allow remote login from docker IPs
-  postgresql_pg_hba:
+  community.postgresql.postgresql_pg_hba:
     dest: /etc/postgresql/14/main/pg_hba.conf
     contype: host
     method: md5
@@ -172,7 +172,7 @@
     - restart postgresql
 
 # - name: Make postgresql accept remote logins
-#   lineinfile:
+#   ansible.builtin.lineinfile:
 #     state: present
 #     line: host    all     all     172.16.0.0/14       md5
 #     path: /etc/postgresql/14/main/pg_hba.conf
@@ -188,7 +188,7 @@
 #     group: postgres
 
 # - name: Point data directory to our data volume
-#   lineinfile:
+#   ansible.builtin.lineinfile:
 #     state: present
 #     line: "data_directory = '{{ postgresql_data_path }}'"
 #     path: '/etc/postgresql/14/main/postgresql.conf'

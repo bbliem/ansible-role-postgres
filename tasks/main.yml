@@ -1,23 +1,26 @@
----
-- include_tasks: packages.yaml
+- name: Install packages
+  ansible.builtin.include_tasks: packages.yml
   tags:
     - packages
 
-- include_tasks: pg_config.yaml
+- name: Configure Postgres
+  ansible.builtin.include_tasks: pg_config.yml
   tags:
     - postgres
 
-- include_tasks: databases.yaml
+- name: Set up databases
+  ansible.builtin.include_tasks: databases.yml
   loop: "{{ postgres_databases }}"
   tags:
     - databases
 
-- include_tasks: exporter.yaml
+- name: Install Prometheus exporter
+  ansible.builtin.include_tasks: exporter.yml
   tags:
     - exporter
 
 - name: Allow access from Docker containers
-  ufw:
+  community.general.ufw:
     rule: allow
     proto: tcp
     from_ip: "{{ item }}"

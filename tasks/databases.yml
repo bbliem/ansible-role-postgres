@@ -1,15 +1,15 @@
 ---
 - name: Create database
-  become: yes
+  become: true
   become_user: postgres
-  postgresql_db:
+  community.postgresql.postgresql_db:
     state: present
     name: "{{ item.name }}"
 
 - name: Create user
-  become: yes
+  become: true
   become_user: postgres
-  postgresql_user:
+  community.postgresql.postgresql_user:
     state: present
     db: "{{ item.name }}"
     name: "{{ item.user }}"
