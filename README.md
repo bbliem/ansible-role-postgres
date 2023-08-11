@@ -4,4 +4,4 @@ Installs PostgreSQL on the host using apt
 
 ## Variables
 
-- `postgres_databases` [required]: Example: `[{name: foo, user: bar, password: baz}]`
+- `postgres_databases` [default: `[]`]: Example: `[{name: foo, user: bar, password: baz}]`
