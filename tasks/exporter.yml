@@ -11,7 +11,7 @@
     src: exporter.service
     mode: 0644
   notify:
-    - restart exporter
+    - Restart exporter
 
 - name: Reload systemd daemon
   ansible.builtin.systemd:
